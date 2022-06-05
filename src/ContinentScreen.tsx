@@ -9,86 +9,61 @@ import {
 } from 'react-native';
 
 import get from 'lodash/get';
-import {Query} from 'react-apollo';
-import gql from 'graphql-tag';
-import {Navigation} from 'react-native-navigation';
-import {ApolloClient, InMemoryCache} from 'apollo-boost';
+import {GET_COUNTRIES} from './constants';
+import {useQuery} from '@apollo/client';
+import {StackActions} from '@react-navigation/native';
 
 interface ContinentScreenProps {
   componentId: string;
   continentInfo: any;
+  route: any;
+  navigation: any;
 }
 
-const client = new ApolloClient({
-  uri: 'https://countries.trevorblades.com',
-  cache: new InMemoryCache(),
-});
-
-const GET_COUNTRIES = gql`
-  {
-    countries {
-      name
-      code
-      emoji
-      emojiU
-    }
-  }
-`;
-const ContinentScreen = (props: ContinentScreenProps) => {
+const ContinentScreen = ({
+  route,
+  navigation,
+}: ContinentScreenProps): JSX.Element => {
+  const {continentInfo} = route.params;
+  const {loading, error, data} = useQuery(GET_COUNTRIES);
   const onChooseItem = (countryInfo: any) => {
-    Navigation.push(props.componentId, {
-      component: {
-        name: 'DetailScreen',
-        options: {
-          topBar: {
-            title: {
-              text: 'DetailScreen',
-            },
-          },
-        },
-        passProps: {
-          countryInfo,
-        },
-      },
-    });
+    navigation.dispatch(
+      StackActions.replace('Detail', {
+        countryInfo,
+      }),
+    );
   };
+
+  if (loading) {
+    return <ActivityIndicator color="green" />;
+  }
+  if (error) {
+    return <Text> {error.message}</Text>;
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{get(props, 'continentInfo.name')}</Text>
+      <Text style={styles.title}>{get(continentInfo, 'name')}</Text>
       <View style={styles.rowInfo}>
         <Text style={styles.textDetail}>{'Code'}</Text>
-        <Text style={styles.textDetail}>
-          {get(props, 'continentInfo.code', '')}
-        </Text>
+        <Text style={styles.textDetail}>{get(continentInfo, 'code', '')}</Text>
       </View>
       <View style={styles.rowInfo}>
         <Text style={styles.textDetail}>{'Countries'}</Text>
-        <Query query={GET_COUNTRIES} client={client}>
-          {({loading, error, data}) => {
-            if (loading) {
-              return <ActivityIndicator color="green" />;
-            }
-            if (error) {
-              return <Text> {error.message}</Text>;
-            }
+        <FlatList
+          data={data.countries}
+          style={styles.listCountry}
+          extraData={data.countries}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => `${item.code}${index}`}
+          renderItem={({item}): JSX.Element => {
             return (
-              <FlatList
-                data={data.countries}
-                extraData={data.countries}
-                keyExtractor={(item, index) => `${item.code}${index}`}
-                renderItem={({item}): JSX.Element => {
-                  return (
-                    <TouchableWithoutFeedback
-                      onPress={() => onChooseItem(item)}>
-                      <Text style={styles.itemText}>{item.name}</Text>
-                    </TouchableWithoutFeedback>
-                  );
-                }}
-              />
+              <TouchableWithoutFeedback onPress={() => onChooseItem(item)}>
+                <Text style={styles.itemText}>{item.name}</Text>
+              </TouchableWithoutFeedback>
             );
           }}
-        </Query>
+        />
       </View>
     </View>
   );
@@ -113,5 +88,12 @@ const styles = StyleSheet.create({
   textDetail: {
     fontSize: 15,
     color: '#111',
+  },
+  itemText: {
+    maxWidth: 100,
+    color: 'blue',
+  },
+  listCountry: {
+    maxWidth: 100,
   },
 });

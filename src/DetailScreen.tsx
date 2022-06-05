@@ -3,44 +3,28 @@ import * as React from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
 
 import get from 'lodash/get';
-import gql from 'graphql-tag';
 import styles from './styles';
 import toString from 'lodash/toString';
 import ApolloClient from 'apollo-boost';
-import {Navigation} from 'react-native-navigation';
+import {GET_COUNTRY_DETAILS} from './constants';
+import {StackActions} from '@react-navigation/native';
 
 interface DetailScreenProps {
+  route: any;
   componentId: string;
   countryInfo: any;
+  navigation: any;
 }
 
 const client = new ApolloClient({
   uri: 'https://countries.trevorblades.com',
 });
-const GET_COUNTRY_DETAILS = gql`
-  query Country($countryCode: ID!) {
-    country(code: $countryCode) {
-      name
-      native
-      emoji
-      currency
-      code
-      phone
-      languages {
-        code
-        name
-      }
-      continent {
-        name
-        code
-      }
-    }
-  }
-`;
 
-const DetailScreen = (props: DetailScreenProps) => {
+const DetailScreen = ({route, navigation}: DetailScreenProps): JSX.Element => {
+  const {countryInfo} = route.params;
+
   const [isLoading, setLoading] = React.useState(true);
-  const [countryDetail, setCountryDetail] = React.useState(props.countryInfo);
+  const [countryDetail, setCountryDetail] = React.useState(countryInfo);
 
   React.useEffect(() => {
     const getCountryDetail = async (countryCode: string) => {
@@ -50,27 +34,17 @@ const DetailScreen = (props: DetailScreenProps) => {
       });
       setCountryDetail(data.country);
     };
-    getCountryDetail(toString(get(props.countryInfo, 'code', 'US'))).then(() =>
+    getCountryDetail(toString(get(countryInfo, 'code', 'US'))).then(() =>
       setLoading(false),
     );
-  }, [props.countryInfo]);
+  }, [countryInfo]);
 
   const goToContinent = (continentInfo: any) => {
-    Navigation.push(props.componentId, {
-      component: {
-        name: 'ContinentScreen',
-        options: {
-          topBar: {
-            title: {
-              text: 'ContinentScreen',
-            },
-          },
-        },
-        passProps: {
-          continentInfo,
-        },
-      },
-    });
+    navigation.dispatch(
+      StackActions.replace('Continent', {
+        continentInfo,
+      }),
+    );
   };
 
   if (isLoading) {
