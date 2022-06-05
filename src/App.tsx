@@ -1,5 +1,7 @@
 import React from 'react';
+import {Text} from 'react-native';
 
+import {linking} from './constants';
 import {HomeScreen} from './HomeScreen';
 import DetailScreen from './DetailScreen';
 import ContinentScreen from './ContinentScreen';
@@ -10,7 +12,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Detail" component={DetailScreen} />

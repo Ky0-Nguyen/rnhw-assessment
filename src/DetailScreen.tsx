@@ -21,7 +21,8 @@ const client = new ApolloClient({
 });
 
 const DetailScreen = ({route, navigation}: DetailScreenProps): JSX.Element => {
-  const {countryInfo} = route.params;
+  const {countryInfo, code} = route.params;
+  console.log('route', route);
 
   const [isLoading, setLoading] = React.useState(true);
   const [countryDetail, setCountryDetail] = React.useState(countryInfo);
@@ -34,10 +35,10 @@ const DetailScreen = ({route, navigation}: DetailScreenProps): JSX.Element => {
       });
       setCountryDetail(data.country);
     };
-    getCountryDetail(toString(get(countryInfo, 'code', 'US'))).then(() =>
+    getCountryDetail(code || get(countryInfo, 'code', 'US')).then(() =>
       setLoading(false),
     );
-  }, [countryInfo]);
+  }, [countryInfo, code]);
 
   const goToContinent = (continentInfo: any) => {
     navigation.dispatch(

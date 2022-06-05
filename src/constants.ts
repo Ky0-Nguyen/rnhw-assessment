@@ -35,3 +35,23 @@ export const GET_COUNTRY_DETAILS = gql`
     }
   }
 `;
+
+export const linking = {
+  prefixes: ['rnhw://'],
+  config: {
+    screens: {
+      Detail: {
+        path: 'country/:code',
+        parse: {
+          id: (code: any) => code,
+        },
+      },
+      Continent: {
+        path: 'continent/:code',
+        parse: {
+          id: (code: any) => code,
+        },
+      },
+    },
+  },
+};
