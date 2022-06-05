@@ -4,7 +4,6 @@ import {ActivityIndicator, Text, View} from 'react-native';
 
 import get from 'lodash/get';
 import styles from './styles';
-import toString from 'lodash/toString';
 import ApolloClient from 'apollo-boost';
 import {GET_COUNTRY_DETAILS} from './constants';
 import {StackActions} from '@react-navigation/native';
