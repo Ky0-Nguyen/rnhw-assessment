@@ -1,6 +1,6 @@
 ## Demo
 
-[![Watch the video](https://i.imgur.com/vKb2F1B.png)](./videos/android-demo.mp4)
+[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://youtu.be/cybhEvjhbBg)
 
 
 ## How to work on this mini-project?
