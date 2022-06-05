@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 
 import get from 'lodash/get';
-import {GET_COUNTRIES} from './constants';
 import {useQuery} from '@apollo/client';
+import {GET_COUNTRIES} from './constants';
 import {StackActions} from '@react-navigation/native';
 
 interface ContinentScreenProps {
