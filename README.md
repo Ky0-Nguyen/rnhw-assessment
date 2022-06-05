@@ -1,3 +1,8 @@
+## Demo
+
+[![Watch the video](https://i.imgur.com/vKb2F1B.png)](./videos/android-demo.mp4)
+
+
 ## How to work on this mini-project?
 
 - Clone this repository to your local machine
@@ -27,3 +32,4 @@ You took the role to develop a React Native app which has the following features
 - When user taps on a country on the continent screen, show the country screen again
 - When user visits [rnhw://country/:code](rnhw://country/:code), show country screen
 - When user visits [rnhw://continent/:code](rnhw://continent/:code), show continent screen.
+
