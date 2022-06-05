@@ -21,8 +21,6 @@ const client = new ApolloClient({
 
 const DetailScreen = ({route, navigation}: DetailScreenProps): JSX.Element => {
   const {countryInfo, code} = route.params;
-  console.log('route', route);
-
   const [isLoading, setLoading] = React.useState(true);
   const [countryDetail, setCountryDetail] = React.useState(countryInfo);
 
